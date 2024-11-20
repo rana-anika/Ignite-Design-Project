@@ -68,7 +68,7 @@ def restock_start() : #use in the beginning of restock function for a more perso
 def how_many_things_are_you_going_to_buy() :
     while True :
         try :
-            number = int(input("Please enter how many items you are checking out:"))
+            number = int(input("Please enter how many types of items you are checking out:"))
             if number >= 0 :
                 return number
             else :
@@ -77,6 +77,19 @@ def how_many_things_are_you_going_to_buy() :
         except :
             print("Please enter an integer value")
             continue
+def how_many_things_are_you_going_to_return() :
+    while True :
+        try :
+            number = int(input("Please enter how many types of items you are returning:"))
+            if number >= 0 :
+                return number
+            else :
+                print("Enter a positive integer.")
+                continue
+        except :
+            print("Please enter an integer value")
+            continue
+
 def not_in_stock(item_num) : #use as an error message when the items bought exceeds items in stock
     print(f"There are not enough of item number {item_num}, please try again with less items.")
 
@@ -167,31 +180,46 @@ def add_new_item_to_inventory(): #add a new item to the inventory
     for i in range(len(mylist)) :
         print(mylist[i])
 
-def append_transaction_log(transaction_list,file_name = "transaction_log.csv",newline='') : #need to fix
+def append_transaction_log_checkout(transaction_list,file_name = "transaction_log.csv",newline='') : #need to fix
+    thelist = ["Purchase"]
     with open(file_name,'a') as file:
         myfile = csv.writer(file)
+        myfile.writerow(thelist)
         myfile.writerows(transaction_list)
         myfile.writerow([])
-def add_back_to_inventory(): #use when customer returns an item
-    item_number, amount = return_items()
-    amount = int(amount)
-    mylist = read_file()
-    header_row = mylist[0]
-    quantity_index = header_row.index('Quantity of Items')
+def append_transaction_log_return(transaction_list,file_name = "transaction_log.csv",newline='') : #need to fix
+    thelist = ["Return"]
+    with open(file_name,'a') as file:
+        myfile = csv.writer(file)
+        myfile.writerow(thelist)
+        myfile.writerows(transaction_list)
+        myfile.writerow([])
 
-    x = None
-    for i in range(len(mylist)):
-        if item_number in mylist[i]:
-            x = i
-        print(mylist[i])
-    if x is not None :
-        new_value = int(mylist[x][quantity_index]) + amount
-        mylist[x][quantity_index] = new_value
-        for i in mylist :
-            print(i)
-        write_file(mylist)
-    else :
-        item_not_found()
+def add_back_to_inventory(): #use when customer returns an item
+    while True :
+        item_number, amount = return_items()
+        amount = int(amount)
+        mylist = read_file()
+        header_row = mylist[0]
+        quantity_index = header_row.index('Quantity of Items')
+
+        x = None
+        for i in range(len(mylist)):
+            if item_number in mylist[i]:
+                x = i
+            #print(mylist[i])
+        if x is not None :
+            new_value = int(mylist[x][quantity_index]) + amount
+            mylist[x][quantity_index] = new_value
+            #for i in mylist :
+                #print(i)
+            write_file(mylist)
+            return_row = mylist[x]
+            return return_row
+        else :
+            item_not_found()
+            print("Our store does not carry this item, please try again")
+            continue
 
 
 def subtract_inventory(): #use this when customer tries to buy something to display before and after of inventory
@@ -248,7 +276,7 @@ def checkout(): #cashier uses this for checkout
     for j in total_transaction :
         print(j)
     print(f'Your total price is ${sum(total_price)}')
-    append_transaction_log(official_transactions, file_name="transaction_log.csv")
+    append_transaction_log_checkout(official_transactions, file_name="transaction_log.csv")
 
 
 #################################################################################################################
@@ -276,10 +304,23 @@ def restock() : #when cashier wants to restock an amount
         print("Restock failed")
         item_not_found()
 ##################################################################################################################
+def return_function() :
+    number_of_items = how_many_things_are_you_going_to_return()
+    total_transaction = []
+    for item_type in range(number_of_items):
+        transaction = add_back_to_inventory()
+        total_transaction.append(transaction)
+    official_transaction = np.array(total_transaction).reshape(number_of_items,4)
+    print("Successful return")
+    append_transaction_log_return(official_transaction, file_name="transaction_log.csv")
+
+
+
+
 #buttons and which functions they would correspond to:
 #checkout button corresponds with checkout()
 #restock button corresponds with restock()
 #add new item corresponds with add_new_item_to_inventory()
-#return corresponds with add_back_to_inventory()
+#return corresponds with return_function()
 
-checkout()
+
