@@ -215,6 +215,7 @@ def add_back_to_inventory(): #use when customer returns an item
                 #print(i)
             write_file(mylist)
             return_row = mylist[x]
+            return_row[quantity_index] = amount
             return return_row
         else :
             item_not_found()
@@ -316,7 +317,8 @@ def return_function() :
 
 
 
-
+checkout()
+return_function()
 #buttons and which functions they would correspond to:
 #checkout button corresponds with checkout()
 #restock button corresponds with restock()
