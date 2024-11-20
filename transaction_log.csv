@@ -1,0 +1,17 @@
+Item Number,Item Name,Quantity of Items,Item Price(Selling),Total Price
+
+Purchase
+P1,Phone,2,100.0,200.0
+R1,Ring,3,500.0,1500.0
+SSH1,spaceship,5,5000000.0,25000000.0
+
+Return
+R1,Ring,500.0,92
+Q3,Queen of Hearts,10.0,17
+
+Purchase
+P1,Phone,1,100.0,100.0
+
+Return
+P1,Phone,100.0,5
+
