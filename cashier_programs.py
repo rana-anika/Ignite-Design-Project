@@ -25,11 +25,11 @@ def buy_items() : #gets the item number and the amount of items and returns in a
         item_stuff = item_stuff.split(',')
         try :
             check = int(item_stuff[1])
-            if check >= 0 :
+            if check > 0 :
                 transaction_info = (item_stuff[0],item_stuff[1])
                 return transaction_info
             else :
-                print("You entered a negative value or float.")
+                print("You entered a negative value,float,or zero.")
                 continue
         except :
             print("Please enter a positive integer")
@@ -40,11 +40,11 @@ def return_items() :
         item_stuff = item_stuff.split(',')
         try:
             check = int(item_stuff[1])
-            if check >= 0:
+            if check > 0:
                 transaction_info = (item_stuff[0], item_stuff[1])
                 return transaction_info
             else:
-                print("You entered a negative value or float.")
+                print("You entered a negative value,float,or zero.")
                 continue
         except:
             print("Please enter a positive integer")
@@ -56,11 +56,11 @@ def restock_start() : #use in the beginning of restock function for a more perso
         item_stuff = item_stuff.split(',')
         try:
             check = int(item_stuff[1])
-            if check >= 0:
+            if check > 0:
                 transaction_info = (item_stuff[0], item_stuff[1])
                 return transaction_info
             else:
-                print("You entered a negative value or float.")
+                print("You entered a negative value,float, or zero.")
                 continue
         except:
             print("Please enter a positive integer")
@@ -69,7 +69,7 @@ def how_many_things_are_you_going_to_buy() :
     while True :
         try :
             number = int(input("Please enter how many types of items you are checking out:"))
-            if number >= 0 :
+            if number > 0 :
                 return number
             else :
                 print("Enter a positive integer.")
@@ -81,7 +81,7 @@ def how_many_things_are_you_going_to_return() :
     while True :
         try :
             number = int(input("Please enter how many types of items you are returning:"))
-            if number >= 0 :
+            if number > 0 :
                 return number
             else :
                 print("Enter a positive integer.")
@@ -102,9 +102,12 @@ def update_selling_price() : #update the selling price of an item
             item_info = input("Please enter item number and new price separated with a comma:")
             item_info = item_info.split(',')
             item_number = item_info[0]
+            dec_check = item_info[1]
             new_price = float(item_info[1])
-            if new_price >= 0.0 :
-                break
+            decimal = dec_check.split('.')
+            if new_price > 0.0 :
+                if len(decimal[1]) <= 2 :
+                    break
             else :
                 print("Enter valid price")
                 continue
@@ -152,10 +155,14 @@ def add_new_item_to_inventory(): #add a new item to the inventory
     while True : #check if price is valid
         try :
             item_info = input("Please enter item price:")
+            decimals = item_info.split('.')
             new_price = float(item_info)
-            if new_price >= 0.0 :
-                new_item.append(new_price)
-                break
+            if new_price > 0.0 :
+                if len(decimals[1]) <= 2 :
+                    new_item.append(new_price)
+                    break
+                else :
+                    print("Only enter 2 decimal places.")
             else :
                 print("Enter valid price")
                 continue
@@ -165,7 +172,7 @@ def add_new_item_to_inventory(): #add a new item to the inventory
     while True: #check if amount is valid
         try:
             number = int(input("Please enter how many items you are adding to stock:"))
-            if number >= 0:
+            if number > 0:
                 new_item.append(number)
                 break
             else:
@@ -316,13 +323,12 @@ def return_function() :
     append_transaction_log_return(official_transaction, file_name="transaction_log.csv")
 
 
+update_selling_price()
 
-checkout()
-return_function()
 #buttons and which functions they would correspond to:
 #checkout button corresponds with checkout()
 #restock button corresponds with restock()
 #add new item corresponds with add_new_item_to_inventory()
 #return corresponds with return_function()
-
+#update the price corresponds with update_selling_price()
 
